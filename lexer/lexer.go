@@ -19,7 +19,6 @@ func New(input string) []string {
 	result := []string{}
 
 	for l.readChar() {
-
 		if !l.hasNextChar() {
 			if !l.currCharIs("\"") {
 				word = append(word, string(l.ch))
@@ -40,12 +39,13 @@ func New(input string) []string {
 			continue
 		}
 
-		word = append(word, string(l.ch))
-
 		if l.currCharIs(" ") && !l.insideQuotes {
 			result = append(result, strings.Join(word, ""))
 			word = nil
+			continue
 		}
+
+		word = append(word, string(l.ch))
 	}
 
 	return result
