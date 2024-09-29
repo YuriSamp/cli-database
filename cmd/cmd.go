@@ -14,6 +14,7 @@ func Execute(input []string, db *database.Database) error {
 	case "SET":
 		return set(args, db)
 	case "GET":
+		return get(args, db)
 	case "BEGIN":
 		return begin(args, db)
 	case "ROLLBACK":
@@ -22,6 +23,19 @@ func Execute(input []string, db *database.Database) error {
 	default:
 		return fmt.Errorf("ERR unknown command: %s", command)
 	}
+
+	return nil
+}
+
+func get(args []string, db *database.Database) error {
+	if len(args) != 1 {
+		return fmt.Errorf("ERR GET <key> - Syntax error")
+	}
+
+	key := args[0]
+	msg := db.Get(key)
+	fmt.Print(msg)
+	fmt.Print("\n")
 
 	return nil
 }

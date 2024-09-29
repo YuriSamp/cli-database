@@ -38,6 +38,17 @@ func (db *Database) Set(key string, value string) string {
 	return msg
 }
 
+func (db *Database) Get(key string) string {
+	layer := db.dbLayers[db.pointer]
+	v, ok := layer[key]
+
+	if ok {
+		return v
+	}
+
+	return "NIL"
+}
+
 func (db *Database) hasKey(key string, value string) string {
 	layer := db.dbLayers[db.pointer]
 	_, ok := layer[key]
