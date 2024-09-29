@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"cli-database/cmd"
 	"cli-database/lexer"
 	"fmt"
 	"os"
@@ -18,11 +19,8 @@ func main() {
 			return
 		}
 
-		result := lexer.New(scanner.Text())
+		input := lexer.New(scanner.Text())
 
-		fmt.Print(result)
-		fmt.Print("\n")
-		fmt.Print(len(result))
-		fmt.Print("\n")
+		cmd.Execute(input)
 	}
 }
