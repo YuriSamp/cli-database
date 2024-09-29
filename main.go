@@ -23,6 +23,11 @@ func main() {
 
 		input := lexer.New(scanner.Text())
 
-		cmd.Execute(input, db)
+		err := cmd.Execute(input, db)
+
+		if err != nil {
+			fmt.Print(err)
+			fmt.Print("\n")
+		}
 	}
 }

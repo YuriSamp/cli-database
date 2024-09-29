@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Execute(input []string, db *database.Database) {
+func Execute(input []string, db *database.Database) error {
 	command := strings.ToUpper(input[0])
 	args := input[1:]
 
@@ -14,9 +14,31 @@ func Execute(input []string, db *database.Database) {
 	case "SET":
 	case "GET":
 	case "BEGIN":
+		return begin(args, db)
 	case "ROLLBACK":
+		return rollback(args, db)
 	case "COMMIT":
 	default:
-		fmt.Print("Unknown command: %s", command)
+		return fmt.Errorf("ERR unknown command: %s", command)
 	}
+
+	fmt.Print(db)
+	return nil
+}
+
+func begin(args []string, db *database.Database) error {
+	if len(args) != 0 {
+		return fmt.Errorf("ERR This command do not receive arguments")
+	}
+
+	db.BeginTransaction()
+	return nil
+}
+
+func rollback(args []string, db *database.Database) error {
+	if len(args) != 0 {
+		return fmt.Errorf("ERR This command do not receive arguments")
+	}
+
+	return db.Rollback()
 }
