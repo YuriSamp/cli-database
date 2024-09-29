@@ -9,6 +9,7 @@ type Database struct {
 
 func New() *Database {
 	layers := make([]map[string]string, 1)
+	layers[0] = make(map[string]string)
 	db := &Database{dbLayers: layers, pointer: 0}
 	return db
 }
@@ -27,4 +28,23 @@ func (db *Database) Rollback() error {
 	db.dbLayers = db.dbLayers[0 : len(db.dbLayers)-1]
 	db.pointer -= 1
 	return nil
+}
+
+func (db *Database) Set(key string, value string) string {
+	msg := db.hasKey(key, value)
+
+	layer := db.dbLayers[db.pointer]
+	layer[key] = value
+	return msg
+}
+
+func (db *Database) hasKey(key string, value string) string {
+	layer := db.dbLayers[db.pointer]
+	_, ok := layer[key]
+
+	if ok {
+		return fmt.Sprintf("TRUE %s", value)
+	}
+
+	return fmt.Sprintf("FALSE %s", value)
 }

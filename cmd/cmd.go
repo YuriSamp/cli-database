@@ -12,6 +12,7 @@ func Execute(input []string, db *database.Database) error {
 
 	switch command {
 	case "SET":
+		return set(args, db)
 	case "GET":
 	case "BEGIN":
 		return begin(args, db)
@@ -22,7 +23,21 @@ func Execute(input []string, db *database.Database) error {
 		return fmt.Errorf("ERR unknown command: %s", command)
 	}
 
-	fmt.Print(db)
+	return nil
+}
+
+func set(args []string, db *database.Database) error {
+	if len(args) != 2 {
+		return fmt.Errorf("ERR SET <key> - <value> - Syntax error")
+	}
+
+	key := args[0]
+	value := args[1]
+
+	msg := db.Set(key, value)
+	fmt.Print(msg)
+	fmt.Print("\n")
+
 	return nil
 }
 
