@@ -2,12 +2,12 @@
 
 ## current features
 
-- [x] create get command
-- [x] create set command
-- [x] create begin command
-- [x] create rollback command
-- [x] create commit command
-- [x] create a command to quit and persist database
+- [x] get command
+- [x] set command
+- [x] begin command
+- [x] rollback command
+- [x] commit command
+- [x] command to quit and persist database
 
 ## todos:
 
