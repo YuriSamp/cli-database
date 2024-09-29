@@ -25,7 +25,7 @@ func (db *Database) Rollback() error {
 		return fmt.Errorf("ERR Invalid command when outside a transaction")
 	}
 
-	db.dbLayers = db.dbLayers[0 : len(db.dbLayers)-1]
+	db.popLastLayer()
 	db.pointer -= 1
 	return nil
 }
@@ -33,13 +33,13 @@ func (db *Database) Rollback() error {
 func (db *Database) Set(key string, value string) string {
 	msg := db.hasKey(key, value)
 
-	layer := db.dbLayers[db.pointer]
+	layer := db.getLayer()
 	layer[key] = value
 	return msg
 }
 
 func (db *Database) Get(key string) string {
-	layer := db.dbLayers[db.pointer]
+	layer := db.getLayer()
 	v, ok := layer[key]
 
 	if ok {
@@ -49,8 +49,27 @@ func (db *Database) Get(key string) string {
 	return "NIL"
 }
 
+func (db *Database) Commit() error {
+	if db.pointer == 0 {
+		return fmt.Errorf("ERR Invalid command when outside a transaction")
+	}
+
+	topLayer := db.getLayer()
+	db.pointer -= 1
+
+	currLayer := db.getLayer()
+
+	for k, v := range topLayer {
+		currLayer[k] = v
+	}
+
+	db.popLastLayer()
+
+	return nil
+}
+
 func (db *Database) hasKey(key string, value string) string {
-	layer := db.dbLayers[db.pointer]
+	layer := db.getLayer()
 	_, ok := layer[key]
 
 	if ok {
@@ -58,4 +77,12 @@ func (db *Database) hasKey(key string, value string) string {
 	}
 
 	return fmt.Sprintf("FALSE %s", value)
+}
+
+func (db *Database) getLayer() map[string]string {
+	return db.dbLayers[db.pointer]
+}
+
+func (db *Database) popLastLayer() {
+	db.dbLayers = db.dbLayers[0 : len(db.dbLayers)-1]
 }

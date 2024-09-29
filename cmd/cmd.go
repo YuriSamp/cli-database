@@ -20,11 +20,10 @@ func Execute(input []string, db *database.Database) error {
 	case "ROLLBACK":
 		return rollback(args, db)
 	case "COMMIT":
+		return commit(args, db)
 	default:
 		return fmt.Errorf("ERR unknown command: %s", command)
 	}
-
-	return nil
 }
 
 func get(args []string, db *database.Database) error {
@@ -70,4 +69,12 @@ func rollback(args []string, db *database.Database) error {
 	}
 
 	return db.Rollback()
+}
+
+func commit(args []string, db *database.Database) error {
+	if len(args) != 0 {
+		return fmt.Errorf("ERR This command do not receive arguments")
+	}
+
+	return db.Commit()
 }

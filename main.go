@@ -25,6 +25,9 @@ func main() {
 
 		err := cmd.Execute(input, db)
 
+		fmt.Print("\n")
+		fmt.Print(db)
+
 		if err != nil {
 			fmt.Print(err)
 			fmt.Print("\n")
