@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"cli-database/cmd"
+	"cli-database/database"
 	"cli-database/lexer"
 	"fmt"
 	"os"
@@ -10,6 +11,7 @@ import (
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
+	db := database.New()
 
 	for {
 		fmt.Print(">  ")
@@ -21,6 +23,6 @@ func main() {
 
 		input := lexer.New(scanner.Text())
 
-		cmd.Execute(input)
+		cmd.Execute(input, db)
 	}
 }
