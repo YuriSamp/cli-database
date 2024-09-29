@@ -21,16 +21,18 @@ func main() {
 			return
 		}
 
+		if scanner.Text() == "" {
+			continue
+		}
+
 		input := lexer.New(scanner.Text())
 
 		err := cmd.Execute(input, db)
 
-		fmt.Print("\n")
 		fmt.Print(db)
 
 		if err != nil {
-			fmt.Print(err)
-			fmt.Print("\n")
+			fmt.Println(err)
 		}
 	}
 }

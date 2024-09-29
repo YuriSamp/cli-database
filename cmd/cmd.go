@@ -32,9 +32,7 @@ func get(args []string, db *database.Database) error {
 	}
 
 	key := args[0]
-	msg := db.Get(key)
-	fmt.Print(msg)
-	fmt.Print("\n")
+	db.Get(key)
 
 	return nil
 }
@@ -47,9 +45,7 @@ func set(args []string, db *database.Database) error {
 	key := args[0]
 	value := args[1]
 
-	msg := db.Set(key, value)
-	fmt.Print(msg)
-	fmt.Print("\n")
+	db.Set(key, value)
 
 	return nil
 }

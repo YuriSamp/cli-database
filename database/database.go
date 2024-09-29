@@ -18,6 +18,7 @@ func (db *Database) BeginTransaction() {
 	newLayer := make(map[string]string)
 	db.dbLayers = append(db.dbLayers, newLayer)
 	db.pointer += 1
+	fmt.Println(db.pointer)
 }
 
 func (db *Database) Rollback() error {
@@ -27,26 +28,29 @@ func (db *Database) Rollback() error {
 
 	db.popLastLayer()
 	db.pointer -= 1
+	fmt.Println(db.pointer)
+
 	return nil
 }
 
-func (db *Database) Set(key string, value string) string {
+func (db *Database) Set(key string, value string) {
 	msg := db.hasKey(key, value)
 
 	layer := db.getLayer()
 	layer[key] = value
-	return msg
+
+	fmt.Println(msg)
 }
 
-func (db *Database) Get(key string) string {
+func (db *Database) Get(key string) {
 	layer := db.getLayer()
 	v, ok := layer[key]
 
 	if ok {
-		return v
+		fmt.Println(v)
 	}
 
-	return "NIL"
+	fmt.Println("NIL")
 }
 
 func (db *Database) Commit() error {
