@@ -1,64 +1,67 @@
 package lexer
 
 import (
-	"fmt"
 	"strings"
 )
 
 type Lexer struct {
 	input        string
-	position     int  // current position in input (points to current char)
-	readPosition int  // current reading position in input (after current char)
-	ch           byte // current char under examination
+	position     int
+	readPosition int
+	ch           byte
+	insideQuotes bool
 }
 
-func New(input string) {
-	l := Lexer{input: input}
+func New(input string) []string {
+	l := Lexer{input: input, insideQuotes: false}
 
+	word := []string{}
 	result := []string{}
 
 	for l.readChar() {
 
+		if !l.hasNextChar() {
+			if !l.currCharIs("\"") {
+				word = append(word, string(l.ch))
+			}
+
+			result = append(result, strings.Join(word, ""))
+			break
+		}
+
 		if l.currCharIs("\\") {
-			result = append(result, string(input[l.readPosition]))
-			l.readPosition += 1
+			l.readChar()
+			word = append(word, string(l.ch))
 			continue
 		}
 
 		if l.currCharIs("\"") {
+			l.insideQuotes = !l.insideQuotes
 			continue
 		}
 
-		result = append(result, string(l.ch))
+		word = append(word, string(l.ch))
+
+		if l.currCharIs(" ") && !l.insideQuotes {
+			result = append(result, strings.Join(word, ""))
+			word = nil
+		}
 	}
 
-	fmt.Print(strings.Join(result, ""))
-	fmt.Print("\n")
+	return result
 }
 
 func (l *Lexer) currCharIs(char string) bool {
-	return char == string(l.input[l.position])
+	return char == string(l.ch)
 }
 
-func (l *Lexer) peekCharIs(char string) bool {
-	if l.readPosition >= len(l.input) {
-		return false
-	}
-
-	return char == string(l.input[l.readPosition])
-}
-
-func (l *Lexer) skipNextToken() {
-	l.readPosition = l.readPosition + 1
+func (l *Lexer) hasNextChar() bool {
+	return l.readPosition < len(l.input)
 }
 
 func (l *Lexer) readChar() bool {
-	if l.readPosition >= len(l.input) {
-		return false
-	} else {
-		l.ch = l.input[l.readPosition]
-		l.position = l.readPosition
-		l.readPosition += 1
-		return true
-	}
+	l.ch = l.input[l.readPosition]
+	l.position = l.readPosition
+	l.readPosition += 1
+	return l.readPosition <= len(l.input)
 }

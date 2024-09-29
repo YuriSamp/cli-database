@@ -18,6 +18,11 @@ func main() {
 			return
 		}
 
-		lexer.New(scanner.Text())
+		result := lexer.New(scanner.Text())
+
+		fmt.Print(result)
+		fmt.Print("\n")
+		fmt.Print(len(result))
+		fmt.Print("\n")
 	}
 }
