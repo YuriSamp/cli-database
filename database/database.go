@@ -1,6 +1,10 @@
 package database
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+)
 
 type Database struct {
 	dbLayers []map[string]string
@@ -9,7 +13,18 @@ type Database struct {
 
 func New() *Database {
 	layers := make([]map[string]string, 1)
-	layers[0] = make(map[string]string)
+
+	var initialLayer map[string]string
+
+	data, err := os.ReadFile("./database.json")
+
+	if err != nil {
+		initialLayer = make(map[string]string)
+	} else {
+		json.Unmarshal(data, &initialLayer)
+	}
+
+	layers[0] = initialLayer
 	db := &Database{dbLayers: layers, pointer: 0}
 	return db
 }
@@ -36,14 +51,14 @@ func (db *Database) Rollback() error {
 func (db *Database) Set(key string, value string) {
 	msg := db.hasKey(key, value)
 
-	layer := db.getLayer()
+	layer := db.getcurrLayer()
 	layer[key] = value
 
 	fmt.Println(msg)
 }
 
 func (db *Database) Get(key string) {
-	layer := db.getLayer()
+	layer := db.getcurrLayer()
 	v, ok := layer[key]
 
 	if ok {
@@ -58,10 +73,10 @@ func (db *Database) Commit() error {
 		return fmt.Errorf("ERR Invalid command when outside a transaction")
 	}
 
-	topLayer := db.getLayer()
+	topLayer := db.getcurrLayer()
 	db.pointer -= 1
 
-	currLayer := db.getLayer()
+	currLayer := db.getcurrLayer()
 
 	for k, v := range topLayer {
 		currLayer[k] = v
@@ -73,7 +88,7 @@ func (db *Database) Commit() error {
 }
 
 func (db *Database) hasKey(key string, value string) string {
-	layer := db.getLayer()
+	layer := db.getcurrLayer()
 	_, ok := layer[key]
 
 	if ok {
@@ -83,8 +98,12 @@ func (db *Database) hasKey(key string, value string) string {
 	return fmt.Sprintf("FALSE %s", value)
 }
 
-func (db *Database) getLayer() map[string]string {
+func (db *Database) getcurrLayer() map[string]string {
 	return db.dbLayers[db.pointer]
+}
+
+func (db *Database) GetFirstLayer() map[string]string {
+	return db.dbLayers[0]
 }
 
 func (db *Database) popLastLayer() {

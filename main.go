@@ -21,6 +21,11 @@ func main() {
 			return
 		}
 
+		if scanner.Text() == ":q" {
+			cmd.CleanUp(db)
+			continue
+		}
+
 		if scanner.Text() == "" {
 			continue
 		}
@@ -29,7 +34,7 @@ func main() {
 
 		err := cmd.Execute(input, db)
 
-		fmt.Print(db)
+		fmt.Println(db)
 
 		if err != nil {
 			fmt.Println(err)
