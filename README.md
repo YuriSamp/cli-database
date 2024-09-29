@@ -2,8 +2,8 @@
 
 ## todos:
 
-- [] improve test for lexer
-- [] Make lexer support utf-8 characteres
+- [ ] improve test for lexer
+- [ ] Make lexer support utf-8 characteres
 - [x] create get command-
 - [x] create set command
 - [x] create begin command
