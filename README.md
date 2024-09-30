@@ -2,6 +2,7 @@
 
 ## current features
 
+- [x] help command
 - [x] get command
 - [x] set command
 - [x] begin command

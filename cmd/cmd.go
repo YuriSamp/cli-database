@@ -21,8 +21,11 @@ func Execute(input []string, db *database.Database) error {
 		return rollback(args, db)
 	case "COMMIT":
 		return commit(args, db)
+	case "HELP":
+		help()
+		return nil
 	default:
-		return fmt.Errorf("ERR unknown command: %s", command)
+		return fmt.Errorf("%s is not a command. See help to list commands", command)
 	}
 }
 
@@ -73,4 +76,14 @@ func commit(args []string, db *database.Database) error {
 	}
 
 	return db.Commit()
+}
+
+func help() {
+	fmt.Println("usage: command <arg1> <arg2>")
+	fmt.Println("   commands:")
+	fmt.Println("     GET Receive one argument and retrieve a value")
+	fmt.Println("     SET Receive two arguments and set a value")
+	fmt.Println("     BEGIN don't receive arguments, init a transaction")
+	fmt.Println("     ROLLBACK don't receive arguments, rollback a transaction")
+	fmt.Println("     COMMIT don't receive arguments, commit a transaction")
 }

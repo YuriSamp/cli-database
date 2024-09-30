@@ -34,8 +34,6 @@ func main() {
 
 		err := cmd.Execute(input, db)
 
-		fmt.Println(db)
-
 		if err != nil {
 			fmt.Println(err)
 		}
