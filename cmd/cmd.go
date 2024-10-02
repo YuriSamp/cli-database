@@ -21,6 +21,8 @@ func Execute(input []string, db *database.Database) error {
 		return rollback(args, db)
 	case "COMMIT":
 		return commit(args, db)
+	case "DEL":
+		return delete(args, db)	
 	case "HELP":
 		help()
 		return nil
@@ -49,6 +51,18 @@ func set(args []string, db *database.Database) error {
 	value := args[1]
 
 	db.Set(key, value)
+
+	return nil
+}
+
+func delete(args []string, db *database.Database) error {
+	if len(args) != 1 {
+		return fmt.Errorf("ERR DEL <key> - Syntax error")
+	}
+
+	key := args[0]
+
+	db.Delete(key)
 
 	return nil
 }

@@ -8,4 +8,5 @@
 - [x] begin command
 - [x] rollback command
 - [x] commit command
+- [x] delete command
 - [x] command to quit and persist database

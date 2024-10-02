@@ -68,6 +68,20 @@ func (db *Database) Get(key string) {
 	fmt.Println("NIL")
 }
 
+func (db *Database) Delete(key string) {
+	layer := db.getcurrLayer()
+	_, ok := layer[key]
+
+	if !ok {
+		fmt.Println("ERR Key not found")
+		return
+	}
+
+	delete(layer, key)
+	
+	fmt.Println("OK")
+}
+
 func (db *Database) Commit() error {
 	if db.pointer == 0 {
 		return fmt.Errorf("ERR Invalid command when outside a transaction")
