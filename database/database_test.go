@@ -2,7 +2,7 @@ package database
 
 import "testing"
 
-func TestDatabaseGetCommandWithValue(t *testing.T) {
+func TestGetCommandWithValue(t *testing.T) {
 
 	db := New()
 	expected := "1"
@@ -15,7 +15,7 @@ func TestDatabaseGetCommandWithValue(t *testing.T) {
 	}
 }
 
-func TestDatabaseGetCommandWithoutValue(t *testing.T) {
+func TestGetCommandWithoutValue(t *testing.T) {
 
 	db := New()
 	expected := "NIL"
@@ -25,3 +25,22 @@ func TestDatabaseGetCommandWithoutValue(t *testing.T) {
 		t.Errorf("Database get command don't return the right value. Expected %s, got=%s", msg, expected)
 	}
 }
+
+func TestSetCommand(t *testing.T) {
+
+	db := New()
+	msg := db.Set("teste", "1")
+	expected := "FALSE 1"
+
+	if msg != expected {
+		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", msg, expected)
+	}
+
+	msg = db.Set("teste", "1")
+	expected = "TRUE 1"
+
+	if msg != expected {
+		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", msg, expected)
+	}
+}
+
