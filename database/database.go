@@ -48,24 +48,24 @@ func (db *Database) Rollback() error {
 	return nil
 }
 
-func (db *Database) Set(key string, value string) {
+func (db *Database) Set(key string, value string) string {
 	msg := db.hasKey(key, value)
 
 	layer := db.getcurrLayer()
 	layer[key] = value
 
-	fmt.Println(msg)
+	return msg
 }
 
-func (db *Database) Get(key string) {
+func (db *Database) Get(key string) string {
 	layer := db.getcurrLayer()
 	v, ok := layer[key]
 
 	if ok {
-		fmt.Println(v)
+		return v
 	}
 
-	fmt.Println("NIL")
+	return "NIL"
 }
 
 func (db *Database) Delete(key string) {
@@ -78,7 +78,7 @@ func (db *Database) Delete(key string) {
 	}
 
 	delete(layer, key)
-	
+
 	fmt.Println("OK")
 }
 

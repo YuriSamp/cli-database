@@ -22,7 +22,7 @@ func Execute(input []string, db *database.Database) error {
 	case "COMMIT":
 		return commit(args, db)
 	case "DEL":
-		return delete(args, db)	
+		return delete(args, db)
 	case "HELP":
 		help()
 		return nil
@@ -37,7 +37,9 @@ func get(args []string, db *database.Database) error {
 	}
 
 	key := args[0]
-	db.Get(key)
+	msg := db.Get(key)
+
+	fmt.Println(msg)
 
 	return nil
 }
@@ -50,7 +52,9 @@ func set(args []string, db *database.Database) error {
 	key := args[0]
 	value := args[1]
 
-	db.Set(key, value)
+	msg := db.Set(key, value)
+
+	fmt.Println(msg)
 
 	return nil
 }
