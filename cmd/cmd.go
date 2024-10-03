@@ -23,10 +23,12 @@ func Execute(input []string, db *database.Database) {
 		commit(args, db)
 	case "DEL":
 		delete(args, db)
-	case "HELP":
-		help()
 	case "COPY":
 		copy(args, db)
+	case "LIST":
+		list(args, db)
+	case "HELP":
+		help()
 	default:
 		fmt.Printf("%s is not a command. See help to list commands \n", command)
 	}
@@ -108,6 +110,18 @@ func copy(args []string, db *database.Database) {
 
 	msg := db.Copy(source, destination)
 	fmt.Println(msg)
+}
+
+func list(args []string, db *database.Database) {
+	if len(args) != 0 {
+		fmt.Println("ERR This command do not receive arguments")
+	}
+
+	msgs := db.List()
+
+	for _, msg := range msgs {
+		fmt.Println(msg)
+	}
 }
 
 func help() {
