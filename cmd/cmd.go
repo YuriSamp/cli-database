@@ -66,7 +66,9 @@ func delete(args []string, db *database.Database) error {
 
 	key := args[0]
 
-	db.Delete(key)
+	msg := db.Delete(key)
+
+	fmt.Println(msg)
 
 	return nil
 }

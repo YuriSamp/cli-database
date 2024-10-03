@@ -68,18 +68,17 @@ func (db *Database) Get(key string) string {
 	return "NIL"
 }
 
-func (db *Database) Delete(key string) {
+func (db *Database) Delete(key string) string {
 	layer := db.getcurrLayer()
 	_, ok := layer[key]
 
 	if !ok {
-		fmt.Println("ERR Key not found")
-		return
+		return "ERR Key not found"
 	}
 
 	delete(layer, key)
 
-	fmt.Println("OK")
+	return "OK"
 }
 
 func (db *Database) Commit() error {

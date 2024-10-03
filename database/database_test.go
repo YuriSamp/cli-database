@@ -44,3 +44,12 @@ func TestSetCommand(t *testing.T) {
 	}
 }
 
+func TestDeleteCommand(t *testing.T) {
+	db := New()
+	msg := db.Delete("teste")
+	expected := "ERR Key not found"
+
+	if msg != expected {
+		t.Errorf("Database delete command don't return the right value. Expected %s, got=%s", msg, expected)
+	}
+}
