@@ -30,7 +30,7 @@ func main() {
 			continue
 		}
 
-		input := lexer.New(scanner.Text())
+		input := lexer.Tokenize(scanner.Text())
 
 		cmd.Execute(input, db)
 	}

@@ -45,10 +45,14 @@ func TestLexer(t *testing.T) {
 			input:  "set \"uma string com espacos\" 1",
 			expect: []string{"set", "uma string com espacos", "1"},
 		},
+		{
+			input:  "coração avô avó",
+			expect: []string{"coração", "avô", "avó"},
+		},
 	}
 
 	for _, tc := range tests {
-		result := New(tc.input)
+		result := Tokenize(tc.input)
 
 		if len(result) != len(tc.expect) {
 			t.Fatalf("expected len of result to be equal to len of expected, but len of result is %d and len of expected is %d", len(result), len(tc.expect))
