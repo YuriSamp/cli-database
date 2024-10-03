@@ -27,8 +27,6 @@ func Execute(input []string, db *database.Database) {
 		copy(args, db)
 	case "LIST":
 		list(args, db)
-	case "HELP":
-		help()
 	default:
 		fmt.Printf("%s is not a command. See help to list commands \n", command)
 	}
@@ -122,14 +120,4 @@ func list(args []string, db *database.Database) {
 	for _, msg := range msgs {
 		fmt.Println(msg)
 	}
-}
-
-func help() {
-	fmt.Println("usage: command <arg1> <arg2>")
-	fmt.Println("   commands:")
-	fmt.Println("     GET Receive one argument and retrieve a value")
-	fmt.Println("     SET Receive two arguments and set a value")
-	fmt.Println("     BEGIN don't receive arguments, init a transaction")
-	fmt.Println("     ROLLBACK don't receive arguments, rollback a transaction")
-	fmt.Println("     COMMIT don't receive arguments, commit a transaction")
 }
