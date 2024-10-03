@@ -11,7 +11,7 @@ func TestGetCommandWithValue(t *testing.T) {
 	msg := db.Get("teste")
 
 	if msg != expected {
-		t.Errorf("Database get command don't return the right value. Expected %s, got=%s", msg, expected)
+		t.Errorf("Database get command don't return the right value. Expected %s, got=%s", expected, msg)
 	}
 }
 
@@ -22,7 +22,7 @@ func TestGetCommandWithoutValue(t *testing.T) {
 	msg := db.Get("teste")
 
 	if msg != expected {
-		t.Errorf("Database get command don't return the right value. Expected %s, got=%s", msg, expected)
+		t.Errorf("Database get command don't return the right value. Expected %s, got=%s", expected, msg)
 	}
 }
 
@@ -33,14 +33,14 @@ func TestSetCommand(t *testing.T) {
 	expected := "FALSE 1"
 
 	if msg != expected {
-		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", msg, expected)
+		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", expected, msg)
 	}
 
 	msg = db.Set("teste", "1")
 	expected = "TRUE 1"
 
 	if msg != expected {
-		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", msg, expected)
+		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", expected, msg)
 	}
 }
 
@@ -50,6 +50,6 @@ func TestDeleteCommand(t *testing.T) {
 	expected := "ERR Key not found"
 
 	if msg != expected {
-		t.Errorf("Database delete command don't return the right value. Expected %s, got=%s", msg, expected)
+		t.Errorf("Database delete command don't return the right value. Expected %s, got=%s", expected, msg)
 	}
 }
