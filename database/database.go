@@ -29,23 +29,23 @@ func New() *Database {
 	return db
 }
 
-func (db *Database) BeginTransaction() {
+func (db *Database) BeginTransaction() string {
 	newLayer := make(map[string]string)
 	db.dbLayers = append(db.dbLayers, newLayer)
 	db.pointer += 1
-	fmt.Println(db.pointer)
+
+	return fmt.Sprintf("%d", db.pointer)
 }
 
-func (db *Database) Rollback() error {
+func (db *Database) Rollback() string {
 	if db.pointer == 0 {
-		return fmt.Errorf("ERR Invalid command when outside a transaction")
+		return "ERR Invalid command when outside a transaction"
 	}
 
 	db.popLastLayer()
 	db.pointer -= 1
-	fmt.Println(db.pointer)
 
-	return nil
+	return fmt.Sprintf("%d", db.pointer)
 }
 
 func (db *Database) Set(key string, value string) string {
@@ -81,9 +81,9 @@ func (db *Database) Delete(key string) string {
 	return "OK"
 }
 
-func (db *Database) Commit() error {
+func (db *Database) Commit() string {
 	if db.pointer == 0 {
-		return fmt.Errorf("ERR Invalid command when outside a transaction")
+		return "ERR Invalid command when outside a transaction"
 	}
 
 	topLayer := db.getcurrLayer()
@@ -97,7 +97,7 @@ func (db *Database) Commit() error {
 
 	db.popLastLayer()
 
-	return nil
+	return "OK"
 }
 
 func (db *Database) hasKey(key string, value string) string {

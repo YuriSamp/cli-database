@@ -6,96 +6,94 @@ import (
 	"strings"
 )
 
-func Execute(input []string, db *database.Database) error {
+func Execute(input []string, db *database.Database) {
 	command := strings.ToUpper(input[0])
 	args := input[1:]
 
 	switch command {
 	case "SET":
-		return set(args, db)
+		set(args, db)
 	case "GET":
-		return get(args, db)
+		get(args, db)
 	case "BEGIN":
-		return begin(args, db)
+		begin(args, db)
 	case "ROLLBACK":
-		return rollback(args, db)
+		rollback(args, db)
 	case "COMMIT":
-		return commit(args, db)
+		commit(args, db)
 	case "DEL":
-		return delete(args, db)
+		delete(args, db)
 	case "HELP":
 		help()
-		return nil
 	default:
-		return fmt.Errorf("%s is not a command. See help to list commands", command)
+		fmt.Printf("%s is not a command. See help to list commands \n", command)
 	}
 }
 
-func get(args []string, db *database.Database) error {
+func get(args []string, db *database.Database) {
 	if len(args) != 1 {
-		return fmt.Errorf("ERR GET <key> - Syntax error")
+		fmt.Println("ERR GET <key> - Syntax error")
+		return
 	}
 
 	key := args[0]
 	msg := db.Get(key)
 
 	fmt.Println(msg)
-
-	return nil
 }
 
-func set(args []string, db *database.Database) error {
+func set(args []string, db *database.Database) {
 	if len(args) != 2 {
-		return fmt.Errorf("ERR SET <key> - <value> - Syntax error")
+		fmt.Println("ERR SET <key> - <value> - Syntax error")
+		return
 	}
 
 	key := args[0]
 	value := args[1]
 
 	msg := db.Set(key, value)
-
 	fmt.Println(msg)
-
-	return nil
 }
 
-func delete(args []string, db *database.Database) error {
+func delete(args []string, db *database.Database) {
 	if len(args) != 1 {
-		return fmt.Errorf("ERR DEL <key> - Syntax error")
+		fmt.Println("ERR DEL <key> - Syntax error")
+		return
 	}
 
 	key := args[0]
-
 	msg := db.Delete(key)
-
 	fmt.Println(msg)
-
-	return nil
 }
 
-func begin(args []string, db *database.Database) error {
+func begin(args []string, db *database.Database) {
 	if len(args) != 0 {
-		return fmt.Errorf("ERR This command do not receive arguments")
+		fmt.Println("ERR This command do not receive arguments")
+		return
 	}
 
-	db.BeginTransaction()
-	return nil
+	msg := db.BeginTransaction()
+	fmt.Println(msg)
 }
 
-func rollback(args []string, db *database.Database) error {
+func rollback(args []string, db *database.Database) {
 	if len(args) != 0 {
-		return fmt.Errorf("ERR This command do not receive arguments")
+		fmt.Println("ERR This command do not receive arguments")
+		return
 	}
 
-	return db.Rollback()
+	msg := db.Rollback()
+	fmt.Println(msg)
 }
 
-func commit(args []string, db *database.Database) error {
+func commit(args []string, db *database.Database) {
 	if len(args) != 0 {
-		return fmt.Errorf("ERR This command do not receive arguments")
+		fmt.Println("ERR This command do not receive arguments")
+		return
 	}
 
-	return db.Commit()
+	msg := db.Commit()
+	fmt.Println(msg)
 }
 
 func help() {
