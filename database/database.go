@@ -68,6 +68,19 @@ func (db *Database) Get(key string) string {
 	return "NIL"
 }
 
+func (db *Database) Copy(source string, destination string) string {
+	layer := db.getcurrLayer()
+	v, ok := layer[source]
+
+	if !ok {
+		return "ERR source not found"
+	}
+
+	db.Set(destination, v)
+
+	return "OK"
+}
+
 func (db *Database) Delete(key string) string {
 	layer := db.getcurrLayer()
 	_, ok := layer[key]

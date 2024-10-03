@@ -25,6 +25,8 @@ func Execute(input []string, db *database.Database) {
 		delete(args, db)
 	case "HELP":
 		help()
+	case "COPY":
+		copy(args, db)
 	default:
 		fmt.Printf("%s is not a command. See help to list commands \n", command)
 	}
@@ -93,6 +95,18 @@ func commit(args []string, db *database.Database) {
 	}
 
 	msg := db.Commit()
+	fmt.Println(msg)
+}
+
+func copy(args []string, db *database.Database) {
+	if len(args) != 2 {
+		fmt.Println("ERR copy <source> <destination> - Syntax error")
+	}
+
+	source := args[0]
+	destination := args[1]
+
+	msg := db.Copy(source, destination)
 	fmt.Println(msg)
 }
 
