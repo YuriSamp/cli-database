@@ -15,6 +15,8 @@ func Execute(input []string, db *database.Database) {
 		set(args, db)
 	case "GET":
 		get(args, db)
+	case "MGET":
+		mget(args, db)
 	case "BEGIN":
 		begin(args, db)
 	case "ROLLBACK":
@@ -29,6 +31,19 @@ func Execute(input []string, db *database.Database) {
 		list(args, db)
 	default:
 		fmt.Printf("%s is not a command. See help to list commands \n", command)
+	}
+}
+
+func mget(keys []string, db *database.Database) {
+	if len(keys) == 0 {
+		fmt.Println("ERR MGET need at least 1 keys")
+		return
+	}
+
+	values := db.Mget(keys)
+
+	for i, v := range values {
+		fmt.Printf("key: %s, value: %s \n", keys[i], v)
 	}
 }
 

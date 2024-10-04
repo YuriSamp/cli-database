@@ -68,6 +68,27 @@ func (db *Database) Get(key string) string {
 	return "NIL"
 }
 
+func (db *Database) Mget(keys []string) []string {
+
+	layer := db.getcurrLayer()
+
+	valuesToPrint := []string{}
+
+	for _, key := range keys {
+
+		v, ok := layer[key]
+
+		if !ok {
+			valuesToPrint = append(valuesToPrint, "NIL")
+			continue
+		}
+
+		valuesToPrint = append(valuesToPrint, v)
+	}
+
+	return valuesToPrint
+}
+
 func (db *Database) Copy(source string, destination string) string {
 	layer := db.getcurrLayer()
 	v, ok := layer[source]
