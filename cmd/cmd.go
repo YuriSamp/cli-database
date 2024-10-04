@@ -11,12 +11,14 @@ func Execute(input []string, db *database.Database) {
 	args := input[1:]
 
 	switch command {
-	case "SET":
-		set(args, db)
 	case "GET":
 		get(args, db)
 	case "MGET":
 		mget(args, db)
+	case "SET":
+		set(args, db)
+	case "MSET":
+		mset(args, db)
 	case "BEGIN":
 		begin(args, db)
 	case "ROLLBACK":
@@ -34,6 +36,18 @@ func Execute(input []string, db *database.Database) {
 	}
 }
 
+func get(args []string, db *database.Database) {
+	if len(args) != 1 {
+		fmt.Println("ERR GET <key> - Syntax error")
+		return
+	}
+
+	key := args[0]
+	msg := db.Get(key)
+
+	fmt.Println(msg)
+}
+
 func mget(keys []string, db *database.Database) {
 	if len(keys) == 0 {
 		fmt.Println("ERR MGET need at least 1 keys")
@@ -47,18 +61,6 @@ func mget(keys []string, db *database.Database) {
 	}
 }
 
-func get(args []string, db *database.Database) {
-	if len(args) != 1 {
-		fmt.Println("ERR GET <key> - Syntax error")
-		return
-	}
-
-	key := args[0]
-	msg := db.Get(key)
-
-	fmt.Println(msg)
-}
-
 func set(args []string, db *database.Database) {
 	if len(args) != 2 {
 		fmt.Println("ERR SET <key> - <value> - Syntax error")
@@ -69,6 +71,16 @@ func set(args []string, db *database.Database) {
 	value := args[1]
 
 	msg := db.Set(key, value)
+	fmt.Println(msg)
+}
+
+func mset(args []string, db *database.Database) {
+	if len(args)%2 != 0 {
+		fmt.Println("EER args of mset cannot be odd")
+		return
+	}
+
+	msg := db.Mset(args)
 	fmt.Println(msg)
 }
 

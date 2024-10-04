@@ -89,6 +89,15 @@ func (db *Database) Mget(keys []string) []string {
 	return valuesToPrint
 }
 
+func (db *Database) Mset(keyValues []string) string {
+
+	for i := 0; i < len(keyValues); i += 2 {
+		db.Set(keyValues[i], keyValues[i+1])
+	}
+
+	return "OK"
+}
+
 func (db *Database) Copy(source string, destination string) string {
 	layer := db.getcurrLayer()
 	v, ok := layer[source]
