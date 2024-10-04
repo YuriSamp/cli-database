@@ -48,56 +48,6 @@ func (db *Database) Rollback() string {
 	return fmt.Sprintf("%d", db.pointer)
 }
 
-func (db *Database) Set(key string, value string) string {
-	msg := db.hasKey(key, value)
-
-	layer := db.getcurrLayer()
-	layer[key] = value
-
-	return msg
-}
-
-func (db *Database) Get(key string) string {
-	layer := db.getcurrLayer()
-	v, ok := layer[key]
-
-	if ok {
-		return v
-	}
-
-	return "NIL"
-}
-
-func (db *Database) Mget(keys []string) []string {
-
-	layer := db.getcurrLayer()
-
-	valuesToPrint := []string{}
-
-	for _, key := range keys {
-
-		v, ok := layer[key]
-
-		if !ok {
-			valuesToPrint = append(valuesToPrint, "NIL")
-			continue
-		}
-
-		valuesToPrint = append(valuesToPrint, v)
-	}
-
-	return valuesToPrint
-}
-
-func (db *Database) Mset(keyValues []string) string {
-
-	for i := 0; i < len(keyValues); i += 2 {
-		db.Set(keyValues[i], keyValues[i+1])
-	}
-
-	return "OK"
-}
-
 func (db *Database) Copy(source string, destination string) string {
 	layer := db.getcurrLayer()
 	v, ok := layer[source]
@@ -153,17 +103,6 @@ func (db *Database) List() []string {
 	}
 
 	return entries
-}
-
-func (db *Database) hasKey(key string, value string) string {
-	layer := db.getcurrLayer()
-	_, ok := layer[key]
-
-	if ok {
-		return fmt.Sprintf("TRUE %s", value)
-	}
-
-	return fmt.Sprintf("FALSE %s", value)
 }
 
 func (db *Database) getcurrLayer() map[string]string {

@@ -31,8 +31,12 @@ func Execute(input []string, db *database.Database) {
 		copy(args, db)
 	case "LIST":
 		list(args, db)
+	case "INCR":
+		incr(args, db)
+	case "DECR":
+		decr(args, db)
 	default:
-		fmt.Printf("%s is not a command. See help to list commands \n", command)
+		fmt.Printf("Unknow command %s \n", command)
 	}
 }
 
@@ -50,7 +54,7 @@ func get(args []string, db *database.Database) {
 
 func mget(keys []string, db *database.Database) {
 	if len(keys) == 0 {
-		fmt.Println("ERR MGET need at least 1 keys")
+		fmt.Println("ERR MGET need at least 1 keys - Syntax error")
 		return
 	}
 
@@ -76,7 +80,7 @@ func set(args []string, db *database.Database) {
 
 func mset(args []string, db *database.Database) {
 	if len(args)%2 != 0 {
-		fmt.Println("EER args of mset cannot be odd")
+		fmt.Println("ERR args of mset cannot be odd - Synax error")
 		return
 	}
 
@@ -97,7 +101,7 @@ func delete(args []string, db *database.Database) {
 
 func begin(args []string, db *database.Database) {
 	if len(args) != 0 {
-		fmt.Println("ERR This command do not receive arguments")
+		fmt.Println("ERR BEGIN command do not receive arguments")
 		return
 	}
 
@@ -107,7 +111,7 @@ func begin(args []string, db *database.Database) {
 
 func rollback(args []string, db *database.Database) {
 	if len(args) != 0 {
-		fmt.Println("ERR This command do not receive arguments")
+		fmt.Println("ERR ROLLBACK command do not receive arguments")
 		return
 	}
 
@@ -117,7 +121,7 @@ func rollback(args []string, db *database.Database) {
 
 func commit(args []string, db *database.Database) {
 	if len(args) != 0 {
-		fmt.Println("ERR This command do not receive arguments")
+		fmt.Println("ERR COMMIT command do not receive arguments")
 		return
 	}
 
@@ -127,7 +131,8 @@ func commit(args []string, db *database.Database) {
 
 func copy(args []string, db *database.Database) {
 	if len(args) != 2 {
-		fmt.Println("ERR copy <source> <destination> - Syntax error")
+		fmt.Println("ERR COPY <source> <destination> - Syntax error")
+		return
 	}
 
 	source := args[0]
@@ -139,7 +144,8 @@ func copy(args []string, db *database.Database) {
 
 func list(args []string, db *database.Database) {
 	if len(args) != 0 {
-		fmt.Println("ERR This command do not receive arguments")
+		fmt.Println("ERR LIST command do not receive arguments - Syntax error")
+		return
 	}
 
 	msgs := db.List()
@@ -147,4 +153,26 @@ func list(args []string, db *database.Database) {
 	for _, msg := range msgs {
 		fmt.Println(msg)
 	}
+}
+
+func incr(args []string, db *database.Database) {
+	if len(args) != 1 {
+		fmt.Println("ERR INCR <key> - Syntax error")
+		return
+	}
+
+	key := args[0]
+	msg := db.Incr(key)
+	fmt.Println(msg)
+}
+
+func decr(args []string, db *database.Database) {
+	if len(args) != 1 {
+		fmt.Println("ERR DECR <key> - Syntax error")
+		return
+	}
+
+	key := args[0]
+	msg := db.Decr(key)
+	fmt.Println(msg)
 }
