@@ -39,6 +39,8 @@ func Execute(input []string, db *database.Database) {
 		ttl(args, db)
 	case "PERSIST":
 		persist(args, db)
+	case "EXPIRE":
+		expire(args, db)
 	default:
 		fmt.Printf("Unknow command %s \n", command)
 	}
@@ -200,5 +202,18 @@ func persist(args []string, db *database.Database) {
 
 	key := args[0]
 	msg := db.Persist(key)
+	fmt.Println(msg)
+}
+
+func expire(args []string, db *database.Database) {
+	if len(args) != 2 {
+		fmt.Println("ERR EXPIRE <KEY> <TIME> - Syntax error")
+		return
+	}
+
+	key := args[0]
+	time := args[1]
+
+	msg := db.Expire(key, time)
 	fmt.Println(msg)
 }

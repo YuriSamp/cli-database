@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 type Entry struct {
@@ -139,30 +140,30 @@ func (db *Database) Persist(key string) string {
 	return "1"
 }
 
-// func (db *Database) Expire(key string, time string) string {
-// 	parsedTime, err := strconv.Atoi(time)
+func (db *Database) Expire(key string, time string) string {
+	parsedTime, err := strconv.Atoi(time)
 
-// 	if err != nil {
-// 		return err.Error()
-// 	}
+	if err != nil {
+		return err.Error()
+	}
 
-// 	layer := db.getcurrLayer()
-// 	v, ok := layer[key]
+	layer := db.getcurrLayer()
+	v, ok := layer[key]
 
-// 	if !ok {
-// 		return "0"
-// 	}
+	if !ok {
+		return "0"
+	}
 
-// 	if parsedTime < 0 {
-// 		db.Delete(key)
-// 		return "1"
-// 	}
+	if parsedTime < 0 {
+		db.Delete(key)
+		return "1"
+	}
 
-// 	newEntry := &Entry{value: v.value, ttl: parsedTime}
-// 	layer[key] = *newEntry
+	newEntry := &Entry{value: v.value, ttl: parsedTime}
+	layer[key] = *newEntry
 
-// 	return "1"
-// }
+	return "1"
+}
 
 func (db *Database) getcurrLayer() map[string]Entry {
 	return db.dbLayers[db.pointer]
