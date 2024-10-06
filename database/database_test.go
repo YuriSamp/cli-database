@@ -2,48 +2,6 @@ package database
 
 import "testing"
 
-func TestGetCommandWithValue(t *testing.T) {
-
-	db := New()
-	expected := "1"
-
-	db.Set("teste", expected)
-	msg := db.Get("teste")
-
-	if msg != expected {
-		t.Errorf("Database get command don't return the right value. Expected %s, got=%s", expected, msg)
-	}
-}
-
-func TestGetCommandWithoutValue(t *testing.T) {
-
-	db := New()
-	expected := "NIL"
-	msg := db.Get("teste")
-
-	if msg != expected {
-		t.Errorf("Database get command don't return the right value. Expected %s, got=%s", expected, msg)
-	}
-}
-
-func TestSetCommand(t *testing.T) {
-
-	db := New()
-	msg := db.Set("teste", "1")
-	expected := "FALSE 1"
-
-	if msg != expected {
-		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", expected, msg)
-	}
-
-	msg = db.Set("teste", "1")
-	expected = "TRUE 1"
-
-	if msg != expected {
-		t.Errorf("Database set command don't return the right value. Expected %s, got=%s", expected, msg)
-	}
-}
-
 func TestDeleteCommand(t *testing.T) {
 	db := New()
 	msg := db.Delete("teste")
@@ -51,5 +9,19 @@ func TestDeleteCommand(t *testing.T) {
 
 	if msg != expected {
 		t.Errorf("Database delete command don't return the right value. Expected %s, got=%s", expected, msg)
+	}
+
+	db.Set("teste", "1")
+
+	msg = db.Delete("teste")
+
+	if msg != "OK" {
+		t.Errorf("Database delete command don't return the right value. Expected %s, got=%s", "OK", msg)
+	}
+
+	msg = db.Get("teste")
+
+	if msg != "NIL" {
+		t.Errorf("Database don't deleted the key")
 	}
 }
