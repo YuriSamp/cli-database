@@ -64,7 +64,7 @@ func (db *Database) Copy(source, destination string) string {
 	v, ok := layer[source]
 
 	if !ok {
-		return "ERR source not found"
+		return "ERR key not found"
 	}
 
 	db.Set(destination, v.value)
