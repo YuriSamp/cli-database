@@ -79,6 +79,16 @@ func TestRollbackCommand(t *testing.T) {
 	}
 }
 
+func TestRollbackCommandOutsideATransaction(t *testing.T) {
+	db := New()
+
+	err := db.Rollback()
+
+	if err != "ERR Invalid command when outside a transaction" {
+		t.Errorf("Something got wrong, rollback ran outside a transaction")
+	}
+}
+
 func TestCopyCommand(t *testing.T) {
 	db := New()
 
@@ -96,5 +106,43 @@ func TestCopyCommand(t *testing.T) {
 
 	if value != setValue {
 		t.Errorf("Database failed to copy a value. Expected %s, got=%s", setValue, value)
+	}
+}
+
+func TestCommitCommand(t *testing.T) {
+	db := New()
+
+	db.Set("teste", "1")
+	db.Set("batata", "2")
+	db.Set("carro", "3")
+
+	db.BeginTransaction()
+
+	db.Set("aviao", "4")
+	db.Set("onibus", "5")
+	db.Set("trem", "6")
+
+	db.Commit()
+
+	layer := db.getcurrLayer()
+
+	if len(layer) != 6 {
+		t.Errorf("Wrong length of database after commit. Expeted %d, got=%d", 6, len(layer))
+	}
+
+	value := db.Get("aviao")
+
+	if value != "4" {
+		t.Errorf("Wrong value after commit. Expected %s, got=%s", "4", value)
+	}
+}
+
+func TestCommitCommandOutsideATransaction(t *testing.T) {
+	db := New()
+
+	err := db.Commit()
+
+	if err != "ERR Invalid command when outside a transaction" {
+		t.Errorf("Something got wrong, commit ran outside a transaction")
 	}
 }
