@@ -48,3 +48,33 @@ func TestBeginCommand(t *testing.T) {
 		t.Errorf("Database set the wrong pointer")
 	}
 }
+
+func TestRollbackCommand(t *testing.T) {
+	db := New()
+
+	db.Set("teste", "1")
+	db.Set("batata", "2")
+	db.Set("carro", "3")
+
+	newPointer := db.BeginTransaction()
+	currLayer := db.getcurrLayer()
+
+	if len(currLayer) != 0 {
+		t.Errorf("Database failed to initialize a new empty layer")
+	}
+
+	if newPointer != "1" {
+		t.Errorf("Database set the wrong pointer")
+	}
+
+	newPointer = db.Rollback()
+	currLayer = db.getcurrLayer()
+
+	if newPointer != "0" {
+		t.Errorf("Database set the wrong pointer at rollback command")
+	}
+
+	if len(currLayer) != 3 {
+		t.Errorf("Database rollback to a empty layer")
+	}
+}
