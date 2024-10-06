@@ -41,6 +41,8 @@ func Execute(input []string, db *database.Database) {
 		persist(args, db)
 	case "EXPIRE":
 		expire(args, db)
+	case "RENAME":
+		rename(args, db)
 	default:
 		fmt.Printf("Unknow command %s \n", command)
 	}
@@ -215,5 +217,18 @@ func expire(args []string, db *database.Database) {
 	time := args[1]
 
 	msg := db.Expire(key, time)
+	fmt.Println(msg)
+}
+
+func rename(args []string, db *database.Database) {
+	if len(args) != 2 {
+		fmt.Println("ERR RENAME <source> <destination> - Syntax error")
+		return
+	}
+
+	source := args[0]
+	destionation := args[1]
+
+	msg := db.Rename(source, destionation)
 	fmt.Println(msg)
 }

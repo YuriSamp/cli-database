@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 type Entry struct {
@@ -54,32 +53,6 @@ func (db *Database) Rollback() string {
 	return fmt.Sprintf("%d", db.pointer)
 }
 
-func (db *Database) Copy(source string, destination string) string {
-	layer := db.getcurrLayer()
-	v, ok := layer[source]
-
-	if !ok {
-		return "ERR source not found"
-	}
-
-	db.Set(destination, v.value)
-
-	return "OK"
-}
-
-func (db *Database) Delete(key string) string {
-	layer := db.getcurrLayer()
-	_, ok := layer[key]
-
-	if !ok {
-		return "ERR Key not found"
-	}
-
-	delete(layer, key)
-
-	return "OK"
-}
-
 func (db *Database) Commit() string {
 	if db.pointer == 0 {
 		return "ERR Invalid command when outside a transaction"
@@ -109,60 +82,6 @@ func (db *Database) List() []string {
 	}
 
 	return entries
-}
-
-func (db *Database) TTL(key string) string {
-	layer := db.getcurrLayer()
-	v, ok := layer[key]
-
-	if !ok {
-		return "-2"
-	}
-
-	if v.ttl == -1 {
-		return "-1"
-	}
-
-	return fmt.Sprintf("%d", v.ttl)
-}
-
-func (db *Database) Persist(key string) string {
-	layer := db.getcurrLayer()
-	v, ok := layer[key]
-
-	if !ok || v.ttl == -1 {
-		return "0"
-	}
-
-	newEntry := &Entry{value: v.value, ttl: -1}
-	layer[key] = *newEntry
-
-	return "1"
-}
-
-func (db *Database) Expire(key string, time string) string {
-	parsedTime, err := strconv.Atoi(time)
-
-	if err != nil {
-		return err.Error()
-	}
-
-	layer := db.getcurrLayer()
-	v, ok := layer[key]
-
-	if !ok {
-		return "0"
-	}
-
-	if parsedTime < 0 {
-		db.Delete(key)
-		return "1"
-	}
-
-	newEntry := &Entry{value: v.value, ttl: parsedTime}
-	layer[key] = *newEntry
-
-	return "1"
 }
 
 func (db *Database) getcurrLayer() map[string]Entry {

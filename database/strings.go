@@ -4,7 +4,7 @@ import (
 	"strconv"
 )
 
-func (db *Database) Set(key string, value string) string {
+func (db *Database) Set(key, value string) string {
 	layer := db.getcurrLayer()
 
 	newEntry := &Entry{value: value, ttl: -1}
