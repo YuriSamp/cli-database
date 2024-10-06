@@ -40,6 +40,6 @@ func TestSetCommand(t *testing.T) {
 	value := db.Get("teste")
 
 	if value != valueToBeSet {
-		t.Errorf("Database don't seted the right value. Expected=%s, got=%s", expected, value)
+		t.Errorf("Database don't set the right value. Expected=%s, got=%s", expected, value)
 	}
 }

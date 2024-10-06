@@ -25,3 +25,26 @@ func TestDeleteCommand(t *testing.T) {
 		t.Errorf("Database don't deleted the key")
 	}
 }
+
+func TestBeginCommand(t *testing.T) {
+	db := New()
+
+	if db.pointer != 0 {
+		t.Errorf("Database initialized with wrong pointer")
+	}
+
+	db.Set("teste", "1")
+	db.Set("batata", "2")
+	db.Set("carro", "3")
+
+	newPointer := db.BeginTransaction()
+	currLayer := db.getcurrLayer()
+
+	if len(currLayer) != 0 {
+		t.Errorf("Database failed to initialize a new empty layer")
+	}
+
+	if newPointer != "1" {
+		t.Errorf("Database set the wrong pointer")
+	}
+}
