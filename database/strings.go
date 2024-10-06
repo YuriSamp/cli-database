@@ -6,7 +6,10 @@ import (
 
 func (db *Database) Set(key string, value string) string {
 	layer := db.getcurrLayer()
-	layer[key] = value
+
+	newEntry := &Entry{value: value, ttl: -1}
+
+	layer[key] = *newEntry
 
 	return "OK"
 }
@@ -16,7 +19,7 @@ func (db *Database) Get(key string) string {
 	v, ok := layer[key]
 
 	if ok {
-		return v
+		return v.value
 	}
 
 	return "NIL"
@@ -37,7 +40,7 @@ func (db *Database) Mget(keys []string) []string {
 			continue
 		}
 
-		valuesToPrint = append(valuesToPrint, v)
+		valuesToPrint = append(valuesToPrint, v.value)
 	}
 
 	return valuesToPrint

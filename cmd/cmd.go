@@ -35,6 +35,10 @@ func Execute(input []string, db *database.Database) {
 		incr(args, db)
 	case "DECR":
 		decr(args, db)
+	case "TTL":
+		ttl(args, db)
+	case "PERSIST":
+		persist(args, db)
 	default:
 		fmt.Printf("Unknow command %s \n", command)
 	}
@@ -174,5 +178,27 @@ func decr(args []string, db *database.Database) {
 
 	key := args[0]
 	msg := db.Decr(key)
+	fmt.Println(msg)
+}
+
+func ttl(args []string, db *database.Database) {
+	if len(args) != 1 {
+		fmt.Println("ERR TTL <key> - Syntax error")
+		return
+	}
+
+	key := args[0]
+	msg := db.TTL(key)
+	fmt.Println(msg)
+}
+
+func persist(args []string, db *database.Database) {
+	if len(args) != 1 {
+		fmt.Println("ERR PERSIST <key> - Syntax error")
+		return
+	}
+
+	key := args[0]
+	msg := db.Persist(key)
 	fmt.Println(msg)
 }
