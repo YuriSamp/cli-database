@@ -78,3 +78,23 @@ func TestRollbackCommand(t *testing.T) {
 		t.Errorf("Database rollback to a empty layer")
 	}
 }
+
+func TestCopyCommand(t *testing.T) {
+	db := New()
+
+	setValue := "10"
+	db.Set("teste", "10")
+	msg := db.Copy("carro", "aviao")
+	expectedError := "ERR source not found"
+
+	if msg != expectedError {
+		t.Errorf("Database should throw an error if an unknown source is gave")
+	}
+
+	db.Copy("teste", "teste2")
+	value := db.Get("teste2")
+
+	if value != setValue {
+		t.Errorf("Database failed to copy a value. Expected %s, got=%s", setValue, value)
+	}
+}
