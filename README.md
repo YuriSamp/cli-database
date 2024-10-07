@@ -2,11 +2,20 @@
 
 ## current features
 
-- [x] help command
-- [x] get command
-- [x] set command
-- [x] begin command
-- [x] rollback command
-- [x] commit command
-- [x] delete command
+- [x] support strings
+- [x] support ints
+- [x] create basics server commands
 - [x] command to quit and persist database
+
+
+## TODO
+
+- [ ] improve tests
+- [ ] chosse where handle expire keys
+- [ ] support lists
+- [ ] support hashes
+- [ ] add more server commands
+- [ ] create an api to handle request 
+- [ ] create a dockerfile
+- [ ] create a client to connect outside of a container
+- [ ] create a cluster module
