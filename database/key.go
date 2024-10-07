@@ -98,3 +98,19 @@ func (db *Database) Rename(sorce, desination string) string {
 
 	return "OK"
 }
+
+func (db *Database) Exists(keys []string) string {
+
+	keyCount := 0
+	layer := db.getcurrLayer()
+
+	for _, key := range keys {
+		_, ok := layer[key]
+
+		if ok {
+			keyCount++
+		}
+	}
+
+	return fmt.Sprintf("%d", keyCount)
+}

@@ -43,6 +43,8 @@ func Execute(input []string, db *database.Database) {
 		expire(args, db)
 	case "RENAME":
 		rename(args, db)
+	case "EXISTS":
+		exists(args, db)
 	default:
 		fmt.Printf("Unknow command %s \n", command)
 	}
@@ -230,5 +232,15 @@ func rename(args []string, db *database.Database) {
 	destionation := args[1]
 
 	msg := db.Rename(source, destionation)
+	fmt.Println(msg)
+}
+
+func exists(args []string, db *database.Database) {
+	if len(args) == 0 {
+		fmt.Println("ERR EXISTIS key [key ...] - Syntax error")
+		return
+	}
+
+	msg := db.Exists(args)
 	fmt.Println(msg)
 }
