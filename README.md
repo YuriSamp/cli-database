@@ -11,7 +11,7 @@
 ## TODO
 
 - [ ] improve tests
-- [ ] chosse where handle expire keys
+- [ ] choose where handle expire keys
 - [ ] support lists
 - [ ] support hashes
 - [ ] add more server commands
