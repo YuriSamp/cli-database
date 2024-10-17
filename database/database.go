@@ -7,7 +7,7 @@ import (
 )
 
 type Entry struct {
-	value string
+	value interface{}
 	ttl   int
 }
 

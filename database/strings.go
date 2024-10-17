@@ -4,7 +4,7 @@ import (
 	"strconv"
 )
 
-func (db *Database) Set(key, value string) string {
+func (db *Database) Set(key string, value interface{}) string {
 	layer := db.getcurrLayer()
 
 	newEntry := &Entry{value: value, ttl: -1}
@@ -18,11 +18,17 @@ func (db *Database) Get(key string) string {
 	layer := db.getcurrLayer()
 	v, ok := layer[key]
 
-	if ok {
-		return v.value
+	if !ok {
+		return "NIL"
 	}
 
-	return "NIL"
+	switch value := v.value.(type) {
+	case string:
+		return value
+	default:
+		return "NIL"
+	}
+
 }
 
 func (db *Database) Mget(keys []string) []string {
@@ -40,7 +46,12 @@ func (db *Database) Mget(keys []string) []string {
 			continue
 		}
 
-		valuesToPrint = append(valuesToPrint, v.value)
+		if value, ok := v.value.(string); ok {
+			valuesToPrint = append(valuesToPrint, value)
+		} else {
+			valuesToPrint = append(valuesToPrint, "NIL")
+		}
+
 	}
 
 	return valuesToPrint
