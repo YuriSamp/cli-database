@@ -72,18 +72,6 @@ func (db *Database) Commit() string {
 	return "OK"
 }
 
-func (db *Database) List() []string {
-	entries := []string{}
-
-	layer := db.getcurrLayer()
-
-	for key, entry := range layer {
-		entries = append(entries, fmt.Sprintf("key: %s, value: %s", key, entry.value))
-	}
-
-	return entries
-}
-
 func (db *Database) getcurrLayer() map[string]Entry {
 	return db.dbLayers[db.pointer]
 }

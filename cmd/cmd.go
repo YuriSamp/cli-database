@@ -29,8 +29,6 @@ func Execute(input []string, db *database.Database) {
 		delete(args, db)
 	case "COPY":
 		copy(args, db)
-	case "LIST":
-		list(args, db)
 	case "INCR":
 		incr(args, db)
 	case "DECR":
@@ -98,7 +96,6 @@ func mset(args []string, db *database.Database) {
 	fmt.Println(msg)
 }
 
-
 func begin(args []string, db *database.Database) {
 	if len(args) != 0 {
 		fmt.Println("ERR BEGIN command do not receive arguments")
@@ -127,19 +124,6 @@ func commit(args []string, db *database.Database) {
 
 	msg := db.Commit()
 	fmt.Println(msg)
-}
-
-func list(args []string, db *database.Database) {
-	if len(args) != 0 {
-		fmt.Println("ERR LIST command do not receive arguments - Syntax error")
-		return
-	}
-
-	msgs := db.List()
-
-	for _, msg := range msgs {
-		fmt.Println(msg)
-	}
 }
 
 func incr(args []string, db *database.Database) {
