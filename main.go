@@ -1,37 +1,36 @@
 package main
 
 import (
-	"bufio"
-	"cli-database/cmd"
-	"cli-database/database"
-	"cli-database/lexer"
-	"fmt"
-	"os"
+	"cli-database/server"
+	"log"
 )
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-	db := database.New()
+	server := server.NewServer(":3000")
+	log.Fatal(server.Start())
 
-	for {
-		fmt.Print(">  ")
-		scanned := scanner.Scan()
+	// scanner := bufio.NewScanner(os.Stdin)
+	// db := database.New()
 
-		if !scanned {
-			return
-		}
+	// for {
+	// 	fmt.Print(">  ")
+	// 	scanned := scanner.Scan()
 
-		if scanner.Text() == ":q" {
-			cmd.CleanUp(db)
-			continue
-		}
+	// 	if !scanned {
+	// 		return
+	// 	}
 
-		if scanner.Text() == "" {
-			continue
-		}
+	// 	if scanner.Text() == ":q" {
+	// 		cmd.CleanUp(db)
+	// 		continue
+	// 	}
 
-		input := lexer.Tokenize(scanner.Text())
+	// 	if scanner.Text() == "" {
+	// 		continue
+	// 	}
 
-		cmd.Execute(input, db)
-	}
+	// 	input := lexer.Tokenize(scanner.Text())
+
+	// 	cmd.Execute(input, db)
+	// }
 }
