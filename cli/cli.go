@@ -1,7 +1,8 @@
-package cmd
+package cli
 
 import (
 	"bufio"
+	"cli-database/cmd"
 	"cli-database/database"
 	"cli-database/lexer"
 	"fmt"
@@ -20,7 +21,7 @@ func StartCli(db *database.Database) {
 		}
 
 		if scanner.Text() == ":q" {
-			CleanUp(db)
+			cmd.CleanUp(db)
 			continue
 		}
 
@@ -30,6 +31,12 @@ func StartCli(db *database.Database) {
 
 		input := lexer.Tokenize(scanner.Text())
 
-		Execute(input, db)
+		msg, err := cmd.Execute(input, db)
+
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(msg)
+		}
 	}
 }

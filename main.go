@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cli-database/cmd"
+	"cli-database/cli"
 	"cli-database/database"
 	"cli-database/server"
 	"log"
@@ -18,6 +18,6 @@ func main() {
 		return
 	} else {
 		// for simplicity i don't care about a lot of things right now
-		cmd.StartCli(db)
+		cli.StartCli(db)
 	}
 }

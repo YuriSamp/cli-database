@@ -5,84 +5,85 @@ import (
 	"fmt"
 )
 
-func ttl(args []string, db *database.Database) {
+func ttl(args []string, db *database.Database) (string, error) {
 	if len(args) != 1 {
-		fmt.Println("ERR TTL <key> - Syntax error")
-		return
+		err := fmt.Errorf("ERR TTL <key> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	msg := db.TTL(key)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func persist(args []string, db *database.Database) {
+func persist(args []string, db *database.Database) (string, error) {
 	if len(args) != 1 {
-		fmt.Println("ERR PERSIST <key> - Syntax error")
-		return
+		err := fmt.Errorf("ERR PERSIST <key> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	msg := db.Persist(key)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func expire(args []string, db *database.Database) {
+func expire(args []string, db *database.Database) (string, error) {
 	if len(args) != 2 {
-		fmt.Println("ERR EXPIRE <KEY> <TIME> - Syntax error")
-		return
+		err := fmt.Errorf("ERR EXPIRE <KEY> <TIME> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	time := args[1]
 
 	msg := db.Expire(key, time)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func copy(args []string, db *database.Database) {
+func copy(args []string, db *database.Database) (string, error) {
 	if len(args) != 2 {
-		fmt.Println("ERR COPY <source> <destination> - Syntax error")
-		return
+		err := fmt.Errorf("ERR COPY <source> <destination> - Syntax error")
+		return "", err
 	}
 
 	source := args[0]
 	destination := args[1]
 
 	msg := db.Copy(source, destination)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func delete(args []string, db *database.Database) {
+func delete(args []string, db *database.Database) (string, error) {
 	if len(args) != 1 {
-		fmt.Println("ERR DEL <key> - Syntax error")
-		return
+		err := fmt.Errorf("ERR DEL <key> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	msg := db.Delete(key)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func rename(args []string, db *database.Database) {
+func rename(args []string, db *database.Database) (string, error) {
 	if len(args) != 2 {
-		fmt.Println("ERR RENAME <source> <destination> - Syntax error")
-		return
+		err := fmt.Errorf("ERR RENAME <source> <destination> - Syntax error")
+		return "", err
 	}
 
 	source := args[0]
 	destionation := args[1]
 
 	msg := db.Rename(source, destionation)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func exists(args []string, db *database.Database) {
+func exists(args []string, db *database.Database) (string, error) {
 	if len(args) == 0 {
-		fmt.Println("ERR EXISTIS key [key ...] - Syntax error")
-		return
+		err := fmt.Errorf("ERR EXISTIS key [key ...] - Syntax error")
+		return "", err
 	}
 
 	msg := db.Exists(args)
 	fmt.Println(msg)
+	return msg, nil
 }

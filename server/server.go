@@ -87,7 +87,11 @@ func (s *Server) messageLoop() {
 	for msg := range s.Msgch {
 
 		input := lexer.Tokenize(msg.payload)
-
-		cmd.Execute(input, s.db)
+		msg, err := cmd.Execute(input, s.db)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(msg)
+		}
 	}
 }

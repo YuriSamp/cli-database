@@ -6,144 +6,146 @@ import (
 	"strings"
 )
 
-func Execute(input []string, db *database.Database) {
+func Execute(input []string, db *database.Database) (string, error) {
 	command := strings.ToUpper(input[0])
 	args := input[1:]
 
 	switch command {
 	case "GET":
-		get(args, db)
+		return get(args, db)
 	case "MGET":
-		mget(args, db)
+		return mget(args, db)
 	case "SET":
-		set(args, db)
+		return set(args, db)
 	case "MSET":
-		mset(args, db)
+		return mset(args, db)
 	case "BEGIN":
-		begin(args, db)
+		return begin(args, db)
 	case "ROLLBACK":
-		rollback(args, db)
+		return rollback(args, db)
 	case "COMMIT":
-		commit(args, db)
+		return commit(args, db)
 	case "DEL":
-		delete(args, db)
+		return delete(args, db)
 	case "COPY":
-		copy(args, db)
+		return copy(args, db)
 	case "INCR":
-		incr(args, db)
+		return incr(args, db)
 	case "DECR":
-		decr(args, db)
+		return decr(args, db)
 	case "TTL":
-		ttl(args, db)
+		return ttl(args, db)
 	case "PERSIST":
-		persist(args, db)
+		return persist(args, db)
 	case "EXPIRE":
-		expire(args, db)
+		return expire(args, db)
 	case "RENAME":
-		rename(args, db)
+		return rename(args, db)
 	case "EXISTS":
-		exists(args, db)
+		return exists(args, db)
 	default:
-		fmt.Printf("Unknow command %s \n", command)
+		err := fmt.Errorf("unknow command %s \n", command)
+		return "", err
 	}
 }
 
-func get(args []string, db *database.Database) {
+func get(args []string, db *database.Database) (string, error) {
 	if len(args) != 1 {
-		fmt.Println("ERR GET <key> - Syntax error")
-		return
+		err := fmt.Errorf("ERR GET <key> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	msg := db.Get(key)
 
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func mget(keys []string, db *database.Database) {
+func mget(keys []string, db *database.Database) (string, error) {
 	if len(keys) == 0 {
-		fmt.Println("ERR MGET need at least 1 keys - Syntax error")
-		return
+		err := fmt.Errorf("ERR MGET need at least 1 keys - Syntax error")
+		return "", err
 	}
 
-	values := db.Mget(keys)
+	// values := db.Mget(keys)
 
-	for i, v := range values {
-		fmt.Printf("key: %s, value: %s \n", keys[i], v)
-	}
+	// for i, v := range values {
+	// 	fmt.Printf("key: %s, value: %s \n", keys[i], v)
+	// }
+	return "empty string for now", nil
 }
 
-func set(args []string, db *database.Database) {
+func set(args []string, db *database.Database) (string, error) {
 	if len(args) != 2 {
-		fmt.Println("ERR SET <key> - <value> - Syntax error")
-		return
+		err := fmt.Errorf("ERR SET <key> - <value> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	value := args[1]
 
 	msg := db.Set(key, value)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func mset(args []string, db *database.Database) {
+func mset(args []string, db *database.Database) (string, error) {
 	if len(args)%2 != 0 {
-		fmt.Println("ERR args of mset cannot be odd - Synax error")
-		return
+		err := fmt.Errorf("ERR args of mset cannot be odd - Synax error")
+		return "", err
 	}
 
 	msg := db.Mset(args)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func begin(args []string, db *database.Database) {
+func begin(args []string, db *database.Database) (string, error) {
 	if len(args) != 0 {
-		fmt.Println("ERR BEGIN command do not receive arguments")
-		return
+		err := fmt.Errorf("ERR BEGIN command do not receive arguments")
+		return "", err
 	}
 
 	msg := db.BeginTransaction()
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func rollback(args []string, db *database.Database) {
+func rollback(args []string, db *database.Database) (string, error) {
 	if len(args) != 0 {
-		fmt.Println("ERR ROLLBACK command do not receive arguments")
-		return
+		err := fmt.Errorf("ERR ROLLBACK command do not receive arguments")
+		return "", err
 	}
 
 	msg := db.Rollback()
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func commit(args []string, db *database.Database) {
+func commit(args []string, db *database.Database) (string, error) {
 	if len(args) != 0 {
-		fmt.Println("ERR COMMIT command do not receive arguments")
-		return
+		err := fmt.Errorf("ERR COMMIT command do not receive arguments")
+		return "", err
 	}
 
 	msg := db.Commit()
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func incr(args []string, db *database.Database) {
+func incr(args []string, db *database.Database) (string, error) {
 	if len(args) != 1 {
-		fmt.Println("ERR INCR <key> - Syntax error")
-		return
+		err := fmt.Errorf("ERR INCR <key> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	msg := db.Incr(key)
-	fmt.Println(msg)
+	return msg, nil
 }
 
-func decr(args []string, db *database.Database) {
+func decr(args []string, db *database.Database) (string, error) {
 	if len(args) != 1 {
-		fmt.Println("ERR DECR <key> - Syntax error")
-		return
+		err := fmt.Errorf("ERR DECR <key> - Syntax error")
+		return "", err
 	}
 
 	key := args[0]
 	msg := db.Decr(key)
-	fmt.Println(msg)
+	return msg, nil
 }
