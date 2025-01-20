@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -101,7 +100,6 @@ func TestCopyCommand(t *testing.T) {
 	expectedError := "ERR source not found"
 
 	if msg != expectedError {
-		fmt.Println(expectedError, msg)
 		t.Errorf("Database should throw an error if an unknown source is gave")
 	}
 
