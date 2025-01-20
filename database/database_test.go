@@ -40,7 +40,7 @@ func TestBeginCommand(t *testing.T) {
 	db.Set("carro", "3")
 
 	newPointer := db.BeginTransaction()
-	currLayer := db.getcurrLayer()
+	currLayer := db.getCurrLayer()
 
 	if len(currLayer) != 0 {
 		t.Errorf("Database failed to initialize a new empty layer")
@@ -59,7 +59,7 @@ func TestRollbackCommand(t *testing.T) {
 	db.Set("carro", "3")
 
 	newPointer := db.BeginTransaction()
-	currLayer := db.getcurrLayer()
+	currLayer := db.getCurrLayer()
 
 	if len(currLayer) != 0 {
 		t.Errorf("Database failed to initialize a new empty layer")
@@ -70,7 +70,7 @@ func TestRollbackCommand(t *testing.T) {
 	}
 
 	newPointer = db.Rollback()
-	currLayer = db.getcurrLayer()
+	currLayer = db.getCurrLayer()
 
 	if newPointer != "0" {
 		t.Errorf("Database set the wrong pointer at rollback command")
@@ -126,7 +126,7 @@ func TestCommitCommand(t *testing.T) {
 
 	db.Commit()
 
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 
 	if len(layer) != 6 {
 		t.Errorf("Wrong length of database after commit. Expeted %d, got=%d", 6, len(layer))

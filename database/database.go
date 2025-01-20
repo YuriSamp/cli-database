@@ -58,10 +58,10 @@ func (db *Database) Commit() string {
 		return "ERR Invalid command when outside a transaction"
 	}
 
-	topLayer := db.getcurrLayer()
+	topLayer := db.getCurrLayer()
 	db.pointer -= 1
 
-	currLayer := db.getcurrLayer()
+	currLayer := db.getCurrLayer()
 
 	for k, v := range topLayer {
 		currLayer[k] = v
@@ -72,7 +72,7 @@ func (db *Database) Commit() string {
 	return "OK"
 }
 
-func (db *Database) getcurrLayer() map[string]Entry {
+func (db *Database) getCurrLayer() map[string]Entry {
 	return db.dbLayers[db.pointer]
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 func (db *Database) TTL(key string) string {
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 	v, ok := layer[key]
 
 	if !ok {
@@ -21,7 +21,7 @@ func (db *Database) TTL(key string) string {
 }
 
 func (db *Database) Persist(key string) string {
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 	v, ok := layer[key]
 
 	if !ok || v.ttl == -1 {
@@ -41,7 +41,7 @@ func (db *Database) Expire(key, time string) string {
 		return err.Error()
 	}
 
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 	v, ok := layer[key]
 
 	if !ok {
@@ -60,7 +60,7 @@ func (db *Database) Expire(key, time string) string {
 }
 
 func (db *Database) Copy(source, destination string) string {
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 	v, ok := layer[source]
 
 	if !ok {
@@ -73,7 +73,7 @@ func (db *Database) Copy(source, destination string) string {
 }
 
 func (db *Database) Delete(key string) string {
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 	_, ok := layer[key]
 
 	if !ok {
@@ -86,7 +86,7 @@ func (db *Database) Delete(key string) string {
 }
 
 func (db *Database) Rename(sorce, desination string) string {
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 	v, ok := layer[sorce]
 
 	if !ok {
@@ -102,7 +102,7 @@ func (db *Database) Rename(sorce, desination string) string {
 func (db *Database) Exists(keys []string) string {
 
 	keyCount := 0
-	layer := db.getcurrLayer()
+	layer := db.getCurrLayer()
 
 	for _, key := range keys {
 		_, ok := layer[key]
