@@ -5,8 +5,6 @@
 - [x] support strings
 - [x] support ints
 - [x] create basics server commands
-- [x] command to quit and persist database
-
 
 ## TODO
 

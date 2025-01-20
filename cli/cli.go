@@ -16,17 +16,8 @@ func StartCli(db *database.Database) {
 		fmt.Print(">  ")
 		scanned := scanner.Scan()
 
-		if !scanned {
+		if !scanned || scanner.Text() == "" {
 			return
-		}
-
-		if scanner.Text() == ":q" {
-			cmd.CleanUp(db)
-			continue
-		}
-
-		if scanner.Text() == "" {
-			continue
 		}
 
 		input := lexer.Tokenize(scanner.Text())
