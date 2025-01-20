@@ -9,16 +9,10 @@ import (
 	"net"
 )
 
-type Message struct {
-	from    string
-	payload string
-}
-
 type Server struct {
 	listenAddr string
 	ln         net.Listener
 	quitch     chan struct{}
-	Msgch      chan Message
 	db         *database.Database
 }
 
@@ -26,7 +20,6 @@ func NewServer(listenAddr string, db *database.Database) *Server {
 	return &Server{
 		listenAddr: listenAddr,
 		quitch:     make(chan struct{}),
-		Msgch:      make(chan Message, 1000),
 		db:         db,
 	}
 }
@@ -42,10 +35,8 @@ func (s *Server) Start() error {
 	s.ln = ln
 
 	go s.acceptLoop()
-	go s.messageLoop()
 
 	<-s.quitch
-	close(s.Msgch)
 
 	return nil
 }
@@ -69,29 +60,20 @@ func (s *Server) readLoop(conn net.Conn) {
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		message := scanner.Text()
-		if len(message) > 0 {
-			s.Msgch <- Message{
-				from:    conn.RemoteAddr().String(),
-				payload: message,
-			}
+		if len(message) == 0 {
+			continue
 		}
-		conn.Write([]byte(""))
+
+		input := lexer.Tokenize(message)
+		msg, err := cmd.Execute(input, s.db)
+		if err != nil {
+			conn.Write([]byte(err.Error()))
+			continue
+		}
+		conn.Write([]byte(msg))
 	}
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println("scanner error:", err)
-	}
-}
-
-func (s *Server) messageLoop() {
-	for msg := range s.Msgch {
-
-		input := lexer.Tokenize(msg.payload)
-		msg, err := cmd.Execute(input, s.db)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println(msg)
-		}
 	}
 }
