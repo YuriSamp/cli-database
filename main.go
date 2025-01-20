@@ -1,36 +1,23 @@
 package main
 
 import (
+	"cli-database/cmd"
+	"cli-database/database"
 	"cli-database/server"
 	"log"
+	"os"
 )
 
 func main() {
-	server := server.NewServer(":3000")
-	log.Fatal(server.Start())
+	args := os.Args
+	db := database.New()
 
-	// scanner := bufio.NewScanner(os.Stdin)
-	// db := database.New()
-
-	// for {
-	// 	fmt.Print(">  ")
-	// 	scanned := scanner.Scan()
-
-	// 	if !scanned {
-	// 		return
-	// 	}
-
-	// 	if scanner.Text() == ":q" {
-	// 		cmd.CleanUp(db)
-	// 		continue
-	// 	}
-
-	// 	if scanner.Text() == "" {
-	// 		continue
-	// 	}
-
-	// 	input := lexer.Tokenize(scanner.Text())
-
-	// 	cmd.Execute(input, db)
-	// }
+	if len(args) > 1 && args[1] == "--tcp" {
+		server := server.NewServer(":3000", db)
+		log.Fatal(server.Start())
+		return
+	} else {
+		// for simplicity i don't care about a lot of things right now
+		cmd.StartCli(db)
+	}
 }

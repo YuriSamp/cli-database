@@ -1,13 +1,17 @@
 package server
 
 import (
+	"bufio"
+	"cli-database/cmd"
+	"cli-database/database"
+	"cli-database/lexer"
 	"fmt"
 	"net"
 )
 
 type Message struct {
 	from    string
-	payload []byte
+	payload string
 }
 
 type Server struct {
@@ -15,13 +19,15 @@ type Server struct {
 	ln         net.Listener
 	quitch     chan struct{}
 	Msgch      chan Message
+	db         *database.Database
 }
 
-func NewServer(listenAddr string) *Server {
+func NewServer(listenAddr string, db *database.Database) *Server {
 	return &Server{
 		listenAddr: listenAddr,
 		quitch:     make(chan struct{}),
 		Msgch:      make(chan Message, 1000),
+		db:         db,
 	}
 }
 
@@ -36,6 +42,7 @@ func (s *Server) Start() error {
 	s.ln = ln
 
 	go s.acceptLoop()
+	go s.messageLoop()
 
 	<-s.quitch
 	close(s.Msgch)
@@ -47,7 +54,7 @@ func (s *Server) acceptLoop() {
 	for {
 		conn, err := s.ln.Accept()
 		if err != nil {
-			fmt.Println("accpet error:", err)
+			fmt.Println("accept error:", err)
 			continue
 		}
 
@@ -59,24 +66,28 @@ func (s *Server) acceptLoop() {
 
 func (s *Server) readLoop(conn net.Conn) {
 	defer conn.Close()
-	buf := make([]byte, 2048)
-
-	for {
-		n, err := conn.Read(buf)
-		if err != nil {
-			fmt.Println("read error:", err)
-			continue
+	scanner := bufio.NewScanner(conn)
+	for scanner.Scan() {
+		message := scanner.Text()
+		if len(message) > 0 {
+			s.Msgch <- Message{
+				from:    conn.RemoteAddr().String(),
+				payload: message,
+			}
 		}
+		conn.Write([]byte(""))
+	}
 
-		s.Msgch <- Message{
-			from:    conn.RemoteAddr().String(),
-			payload: buf[:n],
-		}
+	if err := scanner.Err(); err != nil {
+		fmt.Println("scanner error:", err)
+	}
+}
 
-		conn.Write([]byte("thank you for your message"))
+func (s *Server) messageLoop() {
+	for msg := range s.Msgch {
 
-		for msg := range s.Msgch {
-			fmt.Printf("received message from connection (%s):%s\n", string(msg.from), string(msg.payload))
-		}
+		input := lexer.Tokenize(msg.payload)
+
+		cmd.Execute(input, s.db)
 	}
 }
